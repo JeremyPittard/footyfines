@@ -1,0 +1,53 @@
+---
+import { db, Players, Fines } from "astro:db";
+import { lucia } from "../../lib/lucia";
+import MasterTable from "../../components/MasterTable.astro";
+import Layout from "../../layouts/Layout.astro";
+
+const sessionId = Astro.cookies.get("session");
+
+if (!sessionId) {
+  console.log("no session id");
+  return Astro.redirect("/fines-master/login");
+}
+
+const { session, user } = await lucia.validateSession(sessionId.value);
+
+if (!session || !user) {
+  console.log("no session or user");
+
+  return Astro.redirect("/fines-master/login");
+}
+
+if (Astro.request.method === "POST") {
+  const body = await Astro.request.formData();
+  const name = body.get("newPlayer")?.toString();
+  const fineAmount = body.get("newFine")?.toString();
+  const playerId = body.get("playerId")?.toString();
+
+  console.log(body);
+
+  if (!name) {
+    const amount = fineAmount ? parseFloat(fineAmount) : 0;
+    if (!playerId) {
+      return;
+    }
+    await db.insert(Fines).values({
+      playerId: parseInt(playerId),
+      amount: amount,
+    });
+  }
+
+  if (name) {
+    await db.insert(Players).values({
+      name: name,
+    });
+  }
+
+  return Astro.redirect("/fines-master");
+}
+---
+
+<Layout title="fines master">
+  <MasterTable />
+</Layout>
