@@ -1,53 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Table from "../components/Table.astro";
+import DataTable from "@/components/FinesTable/DataTable";
+import type { TotalFines } from "@/shared/types";
+import { getPlayerFines } from "@/utils/data-helper";
 
-import { db, Users } from "astro:db";
-import { lucia } from "../lib/lucia";
-import { Argon2id } from "oslo/password";
-
-if (Astro.request.method === "POST") {
-  const body = await Astro.request.formData();
-  const email = body.get("email");
-  const password = body.get("password");
-
-  if (!email || typeof email !== "string") {
-    return Astro.redirect(
-      "/register?message=There was an issue please try again"
-    );
-  }
-  if (!password || typeof password !== "string" || password.length < 6) {
-    return Astro.redirect(
-      "/register?message=There was an issue please try again"
-    );
-  }
-
-  const user = await db.select().from(Users);
-
-  if (!user) {
-    return Astro.redirect("/?message=There was an issue please try again");
-  }
-
-  const validPassword = await new Argon2id().verify(
-    user[0].password_hash,
-    password
-  );
-
-  if (!validPassword) {
-    return Astro.redirect("/?message=There was an issue please try again");
-  }
-
-  const session = await lucia.createSession(user[0].id, {});
-  const sessionCookie = lucia.createSessionCookie(session.id);
-
-  Astro.cookies.set("session", sessionCookie.value, {
-    ...sessionCookie.attributes,
-  });
-  console.log("logged in maybe?");
-  return Astro.redirect("/fines-master");
-}
+const playerFines: TotalFines[] = getPlayerFines();
 ---
 
 <Layout title="footy fines">
-  <Table />
+  <DataTable data={playerFines} client:load />
 </Layout>

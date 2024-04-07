@@ -20,6 +20,7 @@ export const Players = defineTable({
   columns: {
     id: column.number({ primaryKey: true, unique: true, autoIncrement: true }),
     name: column.text(),
+    isPeanut: column.boolean({ default: false, optional: true }),
   },
 });
 
