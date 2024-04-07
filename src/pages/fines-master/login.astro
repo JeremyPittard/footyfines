@@ -30,7 +30,10 @@ if (Astro.request.method === "POST") {
     console.log("password wrong");
   }
 
-  const user = await db.select().from(Users).where(eq(Users.email, email));
+  const user = await db
+    .select()
+    .from(Users)
+    .where(eq(Users.email, email as string));
 
   if (!user) {
     console.log("no user");
