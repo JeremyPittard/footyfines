@@ -283,6 +283,8 @@ function DataTable({ data, isAdmin }: Props) {
         </div>
       </div>
     </div>
+    // chuck a drawer in here for editing based on shadcdn one. 
+    // eg <EditDrawer data={playerId} /> 
   );
 }
 
