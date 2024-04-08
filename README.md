@@ -1,20 +1,11 @@
-# AstroDB + Lucia Auth demo
+# FootyFines
 
-This is a basic app using Astro + AstroDB + Lucia Auth
+a web app to facilitate fines sessions after games.
+based on https://github.com/madebyjonny/astrodb-lucia.git to quickly scaffold a log in out. 
 
-There is currently functionality for
-
-- Registering
-- Logging in
-- Protected page example
-
-There is no api examples, just using traditional form submissions.
-
-## Running the app
-
-```
-npm install
-npm rund dev
-```
-
-clone https://github.com/madebyjonny/astrodb-lucia.git footyfines
+## built using 
+- astro
+- astrodb
+- lucia
+- shadcn
+- tailwind
