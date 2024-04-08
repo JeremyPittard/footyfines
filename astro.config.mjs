@@ -11,12 +11,7 @@ import react from "@astrojs/react";
 export default defineConfig({
   output: "server",
   integrations: [db(), tailwind({ applyBaseStyles: true }), react(), robotsTxt({
-    policy: [
-      {
-        userAgent: '*',
-          Disallow: '/',
-      }
-    ]
+    policy: [{ disallow: '/', userAgent: '*' }]
   })],
   adapter: vercel(),
 });
