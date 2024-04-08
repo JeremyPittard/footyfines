@@ -15,7 +15,6 @@ import { ArrowUpDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 import {
   Table,
@@ -26,6 +25,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { TotalFines } from "@/shared/types";
+import AddFinesDrawer from "../AddFinesDrawer/AddFinesDrawer";
+import AddPlayerDrawer from "../AddPlayerDrawer/AddPlayerDrawer";
 
 type Props = {
   data: TotalFines[];
@@ -39,7 +40,6 @@ function DataTable({ data, isAdmin }: Props) {
       header: "",
       cell: ({ row }) => (row.getValue("isPeanut") ? <p>🥜</p> : <p>&nbsp;</p>),
       enableSorting: false,
-      enableHiding: false,
     },
     {
       accessorKey: "playerId",
@@ -129,6 +129,18 @@ function DataTable({ data, isAdmin }: Props) {
         return <div className="text-right font-medium p-4">{formatted}</div>;
       },
     },
+    {
+      id: "edit",
+      header: "",
+
+      cell: () => {
+        return (
+          <div className="flex justify-center items-center">
+            <AddFinesDrawer />
+          </div>
+        );
+      },
+    },
   ];
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -153,13 +165,19 @@ function DataTable({ data, isAdmin }: Props) {
     state: {
       sorting,
       columnFilters,
-      columnVisibility,
+      columnVisibility: {
+        edit: isAdmin ? true : false,
+        playerId: isAdmin ? true : false,
+      },
       rowSelection,
     },
     initialState: {
       pagination: {
         pageIndex: 0,
         pageSize: 12,
+      },
+      columnVisibility: {
+        edit: false,
       },
     },
   });
@@ -175,32 +193,7 @@ function DataTable({ data, isAdmin }: Props) {
           }
           className="w-full text-xl"
         />
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto" size={"lg"}>
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu> */}
+        {isAdmin ? <AddPlayerDrawer /> : null}
       </div>
       <div className="rounded-md border">
         <Table>
@@ -246,22 +239,13 @@ function DataTable({ data, isAdmin }: Props) {
                   className="h-24 text-center"
                 >
                   No results.
+                  {isAdmin ? <AddPlayerDrawer /> : null}
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      {isAdmin ? (
-        <form className="w-full my-2" method="POST">
-          <Label htmlFor="name">Add Name</Label>
-
-          <Input type="text" id="name" name="name" />
-          <Button size="lg" className="w-full my-2">
-            Submit
-          </Button>
-        </form>
-      ) : null}
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="space-x-2">
           <Button
@@ -283,8 +267,6 @@ function DataTable({ data, isAdmin }: Props) {
         </div>
       </div>
     </div>
-    // chuck a drawer in here for editing based on shadcdn one. 
-    // eg <EditDrawer data={playerId} /> 
   );
 }
 

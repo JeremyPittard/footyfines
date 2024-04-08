@@ -1,7 +1,7 @@
 ---
 import { lucia } from "../../lib/lucia";
 import Layout from "../../layouts/Layout.astro";
-import DataTable from "@/components/FinesTable/DataTable";
+import DataTable from "@/components/site/FinesTable/DataTable";
 import type { TotalFines } from "@/shared/types";
 import { db, Players, Fines, Payments } from "astro:db";
 const players = await db.select().from(Players);

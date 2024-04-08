@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import DataTable from "@/components/FinesTable/DataTable";
+import DataTable from "@/components/site/FinesTable/DataTable";
 import type { TotalFines } from "@/shared/types";
 import { getPlayerFines } from "@/utils/data-helper";
 
@@ -10,3 +10,4 @@ const playerFines: TotalFines[] = getPlayerFines();
 <Layout title="footy fines">
   <DataTable data={playerFines} client:load />
 </Layout>
+@/components/site/FinesTable/DataTable
