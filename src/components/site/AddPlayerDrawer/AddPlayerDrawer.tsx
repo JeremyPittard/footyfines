@@ -83,7 +83,7 @@ const AddFinesDrawer = () => {
                     size="icon"
                     className="h-8 w-8 shrink-0 rounded-full"
                     onClick={() => onClick(1)}
-                    disabled={fine >= 5}
+                    disabled={fine >= 10}
                   >
                     <Plus className="h-4 w-4" />
                     <span className="sr-only">Increase</span>
