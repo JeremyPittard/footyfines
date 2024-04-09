@@ -76,6 +76,9 @@ function DataTable({ data, isAdmin }: Props) {
       cell: ({ row }) => (
         <div className="capitalize text-lg p-4">{row.getValue("name")}</div>
       ),
+      meta: {
+        className: "sticky left-0 bg-gray-50",
+      },
     },
     {
       accessorKey: "amountFined",
@@ -133,10 +136,13 @@ function DataTable({ data, isAdmin }: Props) {
       id: "edit",
       header: "",
 
-      cell: () => {
+      cell: ({ row }) => {
         return (
           <div className="flex justify-center items-center">
-            <AddFinesDrawer />
+            <AddFinesDrawer
+              playerName={row.getValue("name")}
+              playerId={row.getValue("playerId")}
+            />
           </div>
         );
       },
@@ -167,7 +173,7 @@ function DataTable({ data, isAdmin }: Props) {
       columnFilters,
       columnVisibility: {
         edit: isAdmin ? true : false,
-        playerId: isAdmin ? true : false,
+        playerId: false,
       },
       rowSelection,
     },

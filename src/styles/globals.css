@@ -34,4 +34,14 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  th:first-of-type,
+  th:nth-of-type(2),
+  tr td:first-child,
+  tr td:nth-child(2) {
+    @apply bg-white;
+    position: sticky;
+    left: 0;
+    z-index: 1;
+  }
 }

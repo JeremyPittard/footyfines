@@ -48,18 +48,12 @@ if (Astro.request.method === "POST") {
   const isPeanut: boolean = body.get("isPeanut") === "on" ? true : false;
   const fineAmount: number = Number(body.get("fineAmount"));
 
-  if (!name || typeof name !== "string" || name === "") {
-    return new Response("Invalid", {
-      status: 400,
-    });
-  }
-
-  if (isPeanut) {
-    await db
-      .update(Players)
-      .set({ isPeanut: false })
-      .where(eq(Players.isPeanut, true));
-  }
+  // if (!name || typeof name !== "string" || name === "") {
+  //   console.log("fucking weird");
+  //   return new Response("Invalid", {
+  //     status: 400,
+  //   });
+  // }
 
   if (!playerId && name) {
     // create new player before continuing
@@ -78,6 +72,18 @@ if (Astro.request.method === "POST") {
         playerId: playerId,
       },
     ]);
+
+    if (isPeanut) {
+      await db
+        .update(Players)
+        .set({ isPeanut: false })
+        .where(eq(Players.isPeanut, true));
+
+      await db
+        .update(Players)
+        .set({ isPeanut: true })
+        .where(eq(Players.id, playerId));
+    }
   }
 
   return Astro.redirect("/fines-master");
