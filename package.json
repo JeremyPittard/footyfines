@@ -1,7 +1,7 @@
 {
-  "name": "auth-demo",
+  "name": "footyfines",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.4.3",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

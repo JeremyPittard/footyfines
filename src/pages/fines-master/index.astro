@@ -3,7 +3,7 @@ import { lucia } from "../../lib/lucia";
 import Layout from "../../layouts/Layout.astro";
 import DataTable from "@/components/site/FinesTable/DataTable";
 import type { TotalFines } from "@/shared/types";
-import { db, Players, Fines, Payments } from "astro:db";
+import { db, Players, Fines, Payments, eq } from "astro:db";
 const players = await db.select().from(Players);
 const fines = await db.select().from(Fines);
 const payments = await db.select().from(Payments);
@@ -43,19 +43,41 @@ const playerFines: TotalFines[] = players.map(({ name, id, isPeanut }) => {
 
 if (Astro.request.method === "POST") {
   const body = await Astro.request.formData();
-  const name = body.get("name");
+  const name: string = body.get("name")?.toString()!;
+  let playerId: number = Number(body.get("playerId"));
+  const isPeanut: boolean = body.get("isPeanut") === "on" ? true : false;
+  const fineAmount: number = Number(body.get("fineAmount"));
 
-  if (!name || typeof name !== "string") {
+  if (!name || typeof name !== "string" || name === "") {
     return new Response("Invalid", {
       status: 400,
     });
   }
 
-  if (name) {
-    console.log(name, "ITS THE FUCKING NAME");
-    await db.insert(Players).values({
-      name: name,
-    });
+  if (isPeanut) {
+    await db
+      .update(Players)
+      .set({ isPeanut: false })
+      .where(eq(Players.isPeanut, true));
+  }
+
+  if (!playerId && name) {
+    // create new player before continuing
+    let newPlayer = await db
+      .insert(Players)
+      .values([{ name: name, isPeanut: isPeanut }])
+      .returning();
+
+    playerId = await newPlayer[0].id;
+  }
+
+  if (playerId) {
+    await db.insert(Fines).values([
+      {
+        amount: fineAmount,
+        playerId: playerId,
+      },
+    ]);
   }
 
   return Astro.redirect("/fines-master");
