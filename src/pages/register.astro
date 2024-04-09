@@ -18,6 +18,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 const message = Astro.url.searchParams.get("message")! || null;
+const isProd = import.meta.env.PROD;
+
+if (isProd) {
+  return Astro.redirect("/");
+}
 
 if (Astro.request.method === "POST") {
   const body = await Astro.request.formData();
